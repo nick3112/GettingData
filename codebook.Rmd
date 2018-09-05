@@ -3,13 +3,12 @@ title: "Assignment Codebook"
 author: 'N'
 date: "September 5, 2018"
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd("C:\\Nick\\07 R\\6JohnHopkins\\3 Getting Data\\Assignment")
 ```
 
 ## Project Description
@@ -122,6 +121,6 @@ summary(tidyT[,3:81])
 ##Annex
 Code used to import the *tidydata.csv* into the *tidyT* dataframe which was used for computing the attributes in the description of the data/variables above
 
-```{r import, hide=tidyT}
+```{r import2, hide=tidyT}
 tidyT<-read.csv(file = "./UCI HAR Dataset/tidydata.csv",sep=" ")
 ```
