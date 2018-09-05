@@ -1,0 +1,127 @@
+---
+title: "Assignment Codebook"
+author: 'N'
+date: "September 5, 2018"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("C:\\Nick\\07 R\\6JohnHopkins\\3 Getting Data\\Assignment")
+```
+
+## Project Description
+The purpose of this project is to demonstrate my ability to collect, work with, and clean a data set. The goal is to prepare tidy data that can be used for later analysis.
+
+The data relate to accelerometer and gyroscope sensor signals collected from 30 participants in a study while carrying out 6 activities
+
+{WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING}.
+
+The final output is a tidy dataset with named columns and a summary of the mean and standard deviation statistics by Activity type and participant.
+
+##Study design and data processing
+
+###Collection of the raw data
+The raw data were downloaded from the site below:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+
+There is a test and train sample with 3 files: 
+ - subject, containing the indicator of which of the 30 participants the dataline refers to
+ - x, containing the sensor readings with a variety of metrics (mean, min, max, std, etc) for each of the available sensors
+ - y, contianing the reference from 1-6 for which activity was being observed on the dataline.
+
+###Notes on the original (raw) data 
+Some additional notes (if avaialble, otherwise you can leave this section out).
+
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+
+The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data. 
+
+The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.
+
+Check the README.txt file for further details about this dataset. 
+
+A video of the experiment including an example of the 6 recorded activities with one of the participants can be seen in the following link: 
+http://www.youtube.com/watch?v=XOEN9W05_4A
+
+##Creating the tidy datafile
+
+###Guide to create the tidy data file
+All the processing is included in the R script "Assignment.r" which is in the GitHub Repo.  The steps are as follows:
+
+1. The data was download and unzip the file
+2. Import the 6 files from test and train
+3. Merge the datasets to crease *subject, x, y*
+3. Minimise the columns of dataset *x* to include only the mean and standard deviation measurements from the sensors to create the *x_clean* dataset.
+4. Apply appropriate column names of all datasets *subject, y, x_clean* and merge them to create the *full* dataset
+5. Summarise the *full* dataset by taking the mean of each of the sensor readings by subject and activity to create the *full_sum* dataset
+6. Output the *full_sum* dataset to a *tidydata.csv* file
+
+##Description of the variables in the tiny_data.txt file
+The general attributes of the data are below:
+
+```{r import, include=FALSE}
+tidyT<-read.csv(file = "./UCI HAR Dataset/tidydata.csv",sep=" ")
+```
+
+Data dimensions with 1 row for eachof the 6 activities by each of the 30 participants giving 180 rows.  There are 81 variables including Subject and Activity leaving 79 mean sensor measurements:
+```{r dim}
+dim(tidyT)
+```
+ 
+The column names are as below
+```{r names}
+names(tidyT)
+```
+
+###Variable 1: Subject
+The variable indicates the subject that the sensor data refers to from the 1-30 participants involved
+
+Data dimensions with 1 row for each 6 
+```{r var1}
+t<-as.data.frame(table(tidyT$Subject));
+names(t)<-c("Participant","RowCount")
+t
+
+```
+
+The data are numeric from 1-30 with 6 observations for each; one observation for each Activity measured.
+ file)
+
+###Variable 2: Activity
+The variable indicates the subject that the sensor data refers to from the 1-30 participants involved
+
+Data dimensions with 1 row for each 6 
+```{r var2}
+q<-as.data.frame(table(tidyT$Activity));
+names(t)<-c("Activity","RowCount")
+q
+
+```
+
+The data are text with 30 observations for each; one observation for each participant measured in the study.
+
+###Variable 3-81: Mean of Sensor Observations
+
+A sample of the first 6 rows of the data from the 79 saensor factors is included below: these are all numeric in type.
+
+```{r sensors_head}
+head(tidyT[,3:81])
+```
+
+Below, a summary of the min, max, median and quartiles of the sensor information.  Note; the variables contain means of the mean and standard deviation by Activity and SUbject, so the summary KPIs themselves are a summary of those mean/standard deviation KPIs.
+
+```{r sensors_summary}
+summary(tidyT[,3:81])
+
+```
+
+##Annex
+Code used to import the *tidydata.csv* into the *tidyT* dataframe which was used for computing the attributes in the description of the data/variables above
+
+```{r import, hide=tidyT}
+tidyT<-read.csv(file = "./UCI HAR Dataset/tidydata.csv",sep=" ")
+```
